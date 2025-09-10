@@ -3,7 +3,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import React from "react";
 
 const Provider = ({ children }: { children: React.ReactNode }) => {
-  return <SidebarProvider>{children}</SidebarProvider>;
+  return <SidebarProvider className="">{children}</SidebarProvider>;
 };
 
 export default Provider;

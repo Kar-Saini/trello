@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Anta, Geist, Geist_Mono } from "next/font/google";
+import { Anta } from "next/font/google";
 import "./globals.css";
 import Provider from "@/providers";
 
@@ -20,9 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${anta.className}`}>
-        <Provider>{children}</Provider>
-      </body>
+      <body className={`${anta.className}`}>{children}</body>
     </html>
   );
 }

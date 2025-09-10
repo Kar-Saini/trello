@@ -13,18 +13,69 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id String @default(cuid()) @id
-  name String
+model User {
+  id                  String         @id @default(cuid())
+  name                String
+  createdOrganization Organization[] @relation(name: "createdByUserToUser")
+  boards              Board[]
+  organizations Organization[] 
+  assignedTasks Task[] @relation(name: "assignedTaskUser")
+  createdTasks Task[] @relation(name: "createdByUser")
+  notification Notification[]
+}
+
+model Board {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  organizationId String
+  Organization Organization @relation(fields: [organizationId], references: [id])
+  tasks Task[]
+}
+
+model Organization {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  name            String
+  createdByUserId String
+  createdByUser   User     @relation(fields: [createdByUserId], references: [id], name: "createdByUserToUser")
+  users User[]
   boards Board[]
 }
-model Board{
+
+
+model Task{
   id String @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime 
   name String
+  description String?
+  assignedToUserId String?
+  assignedUser User? @relation(fields: [assignedToUserId], references: [id], name: "assignedTaskUser")
+  createdByUserId String?
+  createdByUser User? @relation(fields: [createdByUserId], references: [id],  name: "createdByUser")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  boardId String
+  board Board @relation(fields: [boardId], references: [id])
+}
+
+model Notification{
+  id String @id @default(cuid())
+  type NotificationType
   userId String 
   user User @relation(fields: [userId], references: [id])
 }
 
-
+enum NotificationType{
+  TaskCreate
+  TaskUpdate
+  TaskDelete
+  BoardCreate
+  BoardUpdate
+  BoardDelete
+  OrganizationCreate
+  OrganizationDelete
+  OrganizationUpdate
+}
